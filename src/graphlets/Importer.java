@@ -63,6 +63,10 @@ public class Importer {
         }
     }
     
+    public void PrintGraphlet(int id) {
+        
+    }
+    
     private void ParseLine(String line) {
         String[] values = line.split(" ");
         switch (values[0]) {
@@ -77,22 +81,23 @@ public class Importer {
     }
     
     private void BuildDatabase() {
-        CleanTables();
+        //CleanTables();
         CreateTables();
         InsertNodes();
         InsertEdges();
+        InsertBoundaries();
     }
     
     private void CreateTables() {
         String nodeTable = "CREATE table APP.node (" +
                 "vertexId INTEGER NOT NULL " +
                 "PRIMARY KEY GENERATED ALWAYS AS IDENTITY " +
-                "(START WITH 1, INCREMENT BY 1), " +
+                "(START WITH 0, INCREMENT BY 1), " +
                 "label VARCHAR(255))";
         String edgeTable = "CREATE table APP.edge (" +
                 "edgeId INTEGER NOT NULL " +
                 "PRIMARY KEY GENERATED ALWAYS AS IDENTITY " +
-                "(START WITH 1, INCREMENT BY 1), " +
+                "(START WITH 0, INCREMENT BY 1), " +
                 "firstNode INTEGER NOT NULL, " +
                 "secondNode INTEGER NOT NULL, " +
                 "label VARCHAR(255))";
@@ -138,14 +143,14 @@ public class Importer {
         try {
             Statement st = _connection.createStatement();
             String insert = "INSERT INTO APP.boundary VALUES (%s , %s)";
-            List<Node> neighbors;
+            List<Integer> neighbors;
             for (Node n : _nodes) {
                 neighbors = new ArrayList<>();
                 for (Edge e : _edges) {
                     if (n.ItsVertexId == e.ItsFirstNode) {
-                        neighbors.add(_nodes.get(e.ItsSecondNode));
+                        neighbors.add(e.ItsSecondNode);
                     } else if (n.ItsVertexId == e.ItsSecondNode) {
-                        neighbors.add(_nodes.get(e.ItsFirstNode));
+                        neighbors.add(e.ItsFirstNode);
                     }
                 }
                 

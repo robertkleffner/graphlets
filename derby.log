@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Wed Feb 19 22:52:04 PST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): instance a816c00e-0144-4e10-bf41-000007135c38 
+on database directory C:\Users\Cyborg\Documents\NetBeansProjects\Graphlets\graphlets  with class loader sun.misc.Launcher$AppClassLoader@9cc3baa 
+Loaded from file:/C:/Program%20Files/Java/jdk1.7.0_40/db/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_40-b43
+user.dir=C:\Users\Cyborg\Documents\NetBeansProjects\Graphlets
+os.name=Windows 8
+os.arch=amd64
+os.version=6.2
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

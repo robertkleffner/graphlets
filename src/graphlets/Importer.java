@@ -1,25 +1,18 @@
 package graphlets;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Importer {
-    private final String _dbUrl = "jdbc:derby:graphlets;create=true;user=me;password=mine";
-    private Connection _connection;
+    private final String _dbUrl = "jdbc:derby:graphlets;create=true;user=app;password=app";
+    public Connection ItsConnection;
     private List<Node> _nodes;
     private List<Edge> _edges;
     private int _edgeIdCounter;
@@ -28,7 +21,7 @@ public class Importer {
         try {
             Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
             //Get a connection
-            _connection = DriverManager.getConnection(_dbUrl); 
+            ItsConnection = DriverManager.getConnection(_dbUrl); 
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,9 +29,9 @@ public class Importer {
     
     public void Shutdown() {
         try {
-            if (_connection != null) {
+            if (ItsConnection != null) {
                 //DriverManager.getConnection(_dbUrl + ";shutdown=true");
-                _connection.close();
+                ItsConnection.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +74,7 @@ public class Importer {
     }
     
     private void BuildDatabase() {
-        //CleanTables();
+        CleanTables();
         CreateTables();
         InsertNodes();
         InsertEdges();
@@ -106,7 +99,7 @@ public class Importer {
                 "edgeId INTEGER NOT NULL)";
         
         try {
-            Statement s = _connection.createStatement();
+            Statement s = ItsConnection.createStatement();
             s.execute(nodeTable);
             s.execute(edgeTable);
             s.execute(boundaryTable);
@@ -117,7 +110,7 @@ public class Importer {
     
     private void InsertNodes() {
         try {
-            Statement st = _connection.createStatement();
+            Statement st = ItsConnection.createStatement();
             String insert = "INSERT INTO APP.node (label) VALUES ('%s')";
             for (Node n : _nodes) {
                 st.execute(String.format(insert, n.ItsLabel));
@@ -129,7 +122,7 @@ public class Importer {
     
     private void InsertEdges() {
         try {
-            Statement st = _connection.createStatement();
+            Statement st = ItsConnection.createStatement();
             String insert = "INSERT INTO APP.edge (firstNode, secondNode, label) VALUES (%s , %s, '%s')";
             for (Edge e : _edges) {
                 st.execute(String.format(insert, e.ItsFirstNode, e.ItsSecondNode, e.ItsLabel));
@@ -141,7 +134,7 @@ public class Importer {
     
     private void InsertBoundaries() {
         try {
-            Statement st = _connection.createStatement();
+            Statement st = ItsConnection.createStatement();
             String insert = "INSERT INTO APP.boundary VALUES (%s , %s)";
             List<Integer> neighbors;
             for (Node n : _nodes) {
@@ -167,7 +160,7 @@ public class Importer {
     
     private void CleanTables() {
         try {
-            Statement st = _connection.createStatement();
+            Statement st = ItsConnection.createStatement();
             String drop = "DROP TABLE %s";
             st.execute(String.format(drop, "APP.node"));
             st.execute(String.format(drop, "APP.edge"));

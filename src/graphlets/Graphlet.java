@@ -9,9 +9,11 @@ import java.util.List;
 public class Graphlet {
     public Node ItsCenter;
     public List<Node> ItsNeighbors;
+    public List<Edge> ItsEdges;
     public List<Edge> ItsBoundaries;
     
     public Graphlet() {
+        ItsEdges = new ArrayList<>();
         ItsNeighbors = new ArrayList<>();
         ItsBoundaries = new ArrayList<>();
     }

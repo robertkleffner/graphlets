@@ -17,14 +17,26 @@ public class Matcher {
         _connection = c;
     }
     
-    public List<Graph> GetMatchingGraphlets(Graphlet query) {
+    public List<Graph> GetMatchingGraphs(Graph query, boolean useLabel) {
+        List<List<Graphlet>> covers = query.GetMinimalCandidateHubCovers();
+        return null;
+    }
+    
+    public List<Graph> GetMatchingGraphlets(Graphlet query, boolean useLabel) {
         List<Graphlet> graphlets = new ArrayList<>();
         try {
             Statement s = _connection.createStatement();
-            ResultSet rs = s.executeQuery("SELECT * FROM APP.node v "
+            ResultSet rs;
+            if (useLabel) {
+                rs = s.executeQuery("SELECT * FROM APP.node v "
                     + "WHERE v.label = '" + query.ItsCenter.ItsLabel + "' "
                     + "AND (SELECT COUNT (*) FROM APP.edge WHERE firstNode = v.vertexId OR secondNode = v.vertexId) >= " + query.ItsNeighbors.size() + " "
                     + "AND (SELECT COUNT (*) FROM APP.boundary WHERE vertexId = v.vertexId) >= " + query.ItsBoundaries.size() + " ");
+            } else {
+                rs = s.executeQuery("SELECT * FROM APP.node v "
+                    + "WHERE (SELECT COUNT (*) FROM APP.edge WHERE firstNode = v.vertexId OR secondNode = v.vertexId) >= " + query.ItsNeighbors.size() + " "
+                    + "AND (SELECT COUNT (*) FROM APP.boundary WHERE vertexId = v.vertexId) >= " + query.ItsBoundaries.size() + " ");
+            }
             while (rs.next()) {
                 graphlets.add(SelectGraphlet(rs.getInt("vertexId"), rs.getString("label")));
             }
@@ -44,6 +56,9 @@ public class Matcher {
             queryGraph.ItsEdges.add(e);
         }
         
+        queryGraph.GetMinimalCandidateHubCovers();
+        return null;
+        /*
         List<Graph> filtered = new ArrayList<>();
         for (Graphlet g : graphlets) {
             Graph subgraph = new Graph();
@@ -57,14 +72,22 @@ public class Matcher {
             for (Edge e : g.ItsBoundaries) {
                 subgraph.ItsEdges.add(e);
             }
-            Graph result = Graph.FindIsomorphism(subgraph, queryGraph);
-            if (!result.ItsVertices.isEmpty()) {
-                filtered.add(result);
+            List<Graph> result = Graph.FindIsomorphisms(subgraph, queryGraph);
+            for (Graph res : result) {
+                if (!res.ItsVertices.isEmpty()) {
+                    filtered.add(res);
+                }
             }
         }
-        System.out.println(filtered.size());
+        System.out.println("Matched: " + filtered.size() + " graphlet(s)");
+        for (Graph g : filtered) {
+            System.out.println("\tGraph:");
+            System.out.println("\t\tVertices: " + g.ItsVertices);
+            System.out.println("\t\tEdges: " + g.ItsEdges);
+        }
         
         return filtered;
+        */
     }
     
     private Graphlet SelectGraphlet(int vertexId, String label) {
@@ -99,9 +122,9 @@ public class Matcher {
         }
         System.out.println("Graphlet: ");
         System.out.println("\tCenter ID: " + g.ItsCenter.ItsVertexId);
-        System.out.println("\tEdges: " + g.ItsEdges.size());
-        System.out.println("\tNeighbors: " + g.ItsNeighbors.size());
-        System.out.println("\tBoundaries: " + g.ItsBoundaries.size());
+        System.out.println("\tEdges: " + g.ItsEdges.toString());
+        System.out.println("\tNeighbors: " + g.ItsNeighbors.toString());
+        System.out.println("\tBoundaries: " + g.ItsBoundaries.toString());
         return g;
     }
 }

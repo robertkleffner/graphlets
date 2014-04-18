@@ -12,4 +12,29 @@ public class Edge {
         ItsSecondNode = second;
         ItsLabel = label;
     }
+    
+    @Override
+    public String toString() {
+        return "[" + ItsFirstNode + ", " + ItsSecondNode + "]";
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return false;
+        if (!(obj instanceof Edge))
+            return false;
+        Edge other = (Edge)obj;
+        return this.ItsFirstNode == other.ItsFirstNode && this.ItsSecondNode == other.ItsSecondNode;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 17 * hash + this.ItsFirstNode;
+        hash = 17 * hash + this.ItsSecondNode;
+        return hash;
+    }
 }

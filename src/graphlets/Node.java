@@ -8,4 +8,9 @@ public class Node {
         ItsVertexId = vid;
         ItsLabel = label;
     }
+    
+    @Override
+    public String toString() {
+        return "" + ItsVertexId;
+    }
 }

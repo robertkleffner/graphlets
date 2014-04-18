@@ -1,13 +1,10 @@
 ----------------------------------------------------------------
-Thu Mar 27 09:39:53 PDT 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): instance a816c00e-0145-0469-7af1-0000071e9320 
-on database directory C:\Users\Cyborg\Documents\GitHub\graphlets\graphlets  with class loader sun.misc.Launcher$AppClassLoader@dbe996d 
-Loaded from file:/C:/Program%20Files/Java/jdk1.7.0_40/db/lib/derby.jar
+Thu Apr 17 13:34:49 PDT 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-0145-7166-1e92-00000340b458 
+on database directory /Users/robertkleffner/graphlets/graphlets  with class loader sun.misc.Launcher$AppClassLoader@591ce4fe 
+Loaded from file:/Users/robertkleffner/Desktop/graphlets/dist/lib/derby.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.7.0_40-b43
-user.dir=C:\Users\Cyborg\Documents\GitHub\graphlets
-os.name=Windows 8
-os.arch=amd64
-os.version=6.2
+java.runtime.version=1.7.0_45-b18
+user.dir=/Users/robertkleffner/graphlets
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

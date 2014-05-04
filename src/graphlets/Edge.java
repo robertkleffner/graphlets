@@ -13,6 +13,12 @@ public class Edge {
         ItsLabel = label;
     }
     
+    public boolean TouchesNode(int node) {
+        if (ItsFirstNode == node || ItsSecondNode == node)
+            return true;
+        return false;
+    }
+    
     @Override
     public String toString() {
         return "[" + ItsFirstNode + ", " + ItsSecondNode + "]";

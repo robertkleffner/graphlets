@@ -25,13 +25,13 @@ public class Graphlets {
         query.ItsVertices.add(new Node(1, "B"));
         query.ItsVertices.add(new Node(2, "C"));
         query.ItsVertices.add(new Node(3, "D"));
-        query.ItsVertices.add(new Node(4, "E"));
         query.ItsEdges.add(new Edge(01, 0, 1, "01"));
-        query.ItsEdges.add(new Edge(12, 1, 2, "12"));
+        query.ItsEdges.add(new Edge(02, 0, 2, "02"));
         query.ItsEdges.add(new Edge(03, 0, 3, "03"));
-        query.ItsEdges.add(new Edge(04, 0, 4, "04"));
-        query.ItsEdges.add(new Edge(34, 3, 4, "34"));
-        m.GetMatchingGraphs(query, false);
+        query.ItsEdges.add(new Edge(12, 1, 2, "12"));
+        query.ItsEdges.add(new Edge(13, 1, 3, "13"));
+        query.ItsEdges.add(new Edge(23, 2, 3, "23"));
+        m.GetMatchingGraphs(query, true);
         
         i.Shutdown();
     }

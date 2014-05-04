@@ -144,6 +144,13 @@ public class Graph {
                 }
             }
             if (!covers.isEmpty()) {
+                for (List<Graphlet> gs : covers) {
+                    for (int k = 0; k < gs.size(); k++) {
+                        for (int j = k + 1; j < gs.size(); j++) {
+                            ConstructSharedNeighbors(gs.get(k), gs.get(j));
+                        }
+                    }
+                }
                 for (List<Graphlet> g : covers) {
                     System.out.println(g);
                 }
@@ -200,6 +207,34 @@ public class Graph {
         for (int i = start; i <= end && end-i+1 >= ncombs-index; i++) {
             data.set(index, values.get(i));
             combinationUtil(values, data, build, i+1, end, index+1, ncombs);
+        }
+    }
+    
+    private void ConstructSharedNeighbors(Graphlet g1, Graphlet g2) {
+        for (int i = 0; i < g2.ItsNeighbors.size(); i++) {
+            if (g1.HasNeighborId(g2.ItsNeighbors.get(i).ItsVertexId)) {
+                if (!g1.ItsSharedNeighbors.containsKey(g2))
+                    g1.ItsSharedNeighbors.put(g2, new ArrayList<Integer>());
+                g1.ItsSharedNeighbors.get(g2).add(i);
+            }
+        }
+        for (int i = 0; i < g1.ItsNeighbors.size(); i++) {
+            if (g2.HasNeighborId(g1.ItsNeighbors.get(i).ItsVertexId)) {
+                if (!g2.ItsSharedNeighbors.containsKey(g1))
+                    g2.ItsSharedNeighbors.put(g1, new ArrayList<Integer>());
+                g2.ItsSharedNeighbors.get(g1).add(i);
+            }
+        }
+        
+        if (g1.HasNeighborId(g2.ItsCenter.ItsVertexId)) {
+            if (!g1.ItsSharedNeighbors.containsKey(g2))
+                g1.ItsSharedNeighbors.put(g2, new ArrayList<Integer>());
+            g1.ItsSharedNeighbors.get(g2).add(-1);
+        }
+        if (g2.HasNeighborId(g1.ItsCenter.ItsVertexId)) {
+            if (!g2.ItsSharedNeighbors.containsKey(g1))
+                g2.ItsSharedNeighbors.put(g1, new ArrayList<Integer>());
+            g2.ItsSharedNeighbors.get(g1).add(-1);
         }
     }
 }

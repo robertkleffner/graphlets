@@ -56,10 +56,6 @@ public class Importer {
         }
     }
     
-    public void PrintGraphlet(int id) {
-        
-    }
-    
     private void ParseLine(String line) {
         String[] values = line.split(" ");
         switch (values[0]) {

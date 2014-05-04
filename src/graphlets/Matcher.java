@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Rob Kleffner
@@ -19,10 +20,32 @@ public class Matcher {
     
     public List<Graph> GetMatchingGraphs(Graph query, boolean useLabel) {
         List<List<Graphlet>> covers = query.GetMinimalCandidateHubCovers();
+        // right now, just use the first cover
+        List<Graphlet> cover = covers.get(0);
+        for (Graphlet g : cover) {
+            System.out.println(g.SharedNeighborsInfo());
+        }
+        
+        Graphlet first = cover.get(0);
+        List<Graphlet> matches = GetCandidateMatchingGraphlets(first, useLabel);
+        for (Graphlet g : matches) {
+            List<Map<Integer, Integer>> mappings = Graphlet.IsomorphicSubgraphMappings(first, g, useLabel);
+            System.out.println(mappings.size());
+            for (Map<Integer, Integer> m : mappings) {
+                System.out.println(mappings);
+            }
+        }
+        // select all candidates for first graphlet
+        // check for isomorphism
+        // for each result, select neighboring graphlets containing shared vertices
+            // if no result, eliminate entire subsearch
+            // else check for isomorphism
+        // 
+        
         return null;
     }
     
-    public List<Graph> GetMatchingGraphlets(Graphlet query, boolean useLabel) {
+    public List<Graphlet> GetCandidateMatchingGraphlets(Graphlet query, boolean useLabel) {
         List<Graphlet> graphlets = new ArrayList<>();
         try {
             Statement s = _connection.createStatement();
@@ -44,20 +67,7 @@ public class Matcher {
             e.printStackTrace();
         }
         
-        Graph queryGraph = new Graph();
-        queryGraph.ItsVertices.add(query.ItsCenter);
-        for (Node n : query.ItsNeighbors) {
-            queryGraph.ItsVertices.add(n);
-        }
-        for (Edge e : query.ItsEdges) {
-            queryGraph.ItsEdges.add(e);
-        }
-        for (Edge e : query.ItsBoundaries) {
-            queryGraph.ItsEdges.add(e);
-        }
-        
-        queryGraph.GetMinimalCandidateHubCovers();
-        return null;
+        return graphlets;
         /*
         List<Graph> filtered = new ArrayList<>();
         for (Graphlet g : graphlets) {

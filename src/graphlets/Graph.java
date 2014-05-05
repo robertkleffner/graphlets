@@ -15,6 +15,11 @@ public class Graph {
         ItsEdges = new ArrayList<>();
     }
     
+    public Graph(List<Node> vertices, List<Edge> edges) {
+        ItsVertices = new ArrayList<>(vertices);
+        ItsEdges = new ArrayList<>(edges);
+    }
+    
     public Node GetNodeById(int id) {
         for (Node n : ItsVertices) {
             if (id == n.ItsVertexId) {
@@ -147,7 +152,7 @@ public class Graph {
                 for (List<Graphlet> gs : covers) {
                     for (int k = 0; k < gs.size(); k++) {
                         for (int j = k + 1; j < gs.size(); j++) {
-                            ConstructSharedNeighbors(gs.get(k), gs.get(j));
+                            ConstructSharedNeighbors(gs.get(k), gs.get(j), k, j);
                         }
                     }
                 }
@@ -210,31 +215,31 @@ public class Graph {
         }
     }
     
-    private void ConstructSharedNeighbors(Graphlet g1, Graphlet g2) {
+    private void ConstructSharedNeighbors(Graphlet g1, Graphlet g2, int i1, int i2) {
         for (int i = 0; i < g2.ItsNeighbors.size(); i++) {
             if (g1.HasNeighborId(g2.ItsNeighbors.get(i).ItsVertexId)) {
-                if (!g1.ItsSharedNeighbors.containsKey(g2))
-                    g1.ItsSharedNeighbors.put(g2, new ArrayList<Integer>());
-                g1.ItsSharedNeighbors.get(g2).add(i);
+                if (!g1.ItsSharedNeighbors.containsKey(i2))
+                    g1.ItsSharedNeighbors.put(i2, new ArrayList<Integer>());
+                g1.ItsSharedNeighbors.get(i2).add(i);
             }
         }
         for (int i = 0; i < g1.ItsNeighbors.size(); i++) {
             if (g2.HasNeighborId(g1.ItsNeighbors.get(i).ItsVertexId)) {
-                if (!g2.ItsSharedNeighbors.containsKey(g1))
-                    g2.ItsSharedNeighbors.put(g1, new ArrayList<Integer>());
-                g2.ItsSharedNeighbors.get(g1).add(i);
+                if (!g2.ItsSharedNeighbors.containsKey(i1))
+                    g2.ItsSharedNeighbors.put(i1, new ArrayList<Integer>());
+                g2.ItsSharedNeighbors.get(i1).add(i);
             }
         }
         
         if (g1.HasNeighborId(g2.ItsCenter.ItsVertexId)) {
-            if (!g1.ItsSharedNeighbors.containsKey(g2))
-                g1.ItsSharedNeighbors.put(g2, new ArrayList<Integer>());
-            g1.ItsSharedNeighbors.get(g2).add(-1);
+            if (!g1.ItsSharedNeighbors.containsKey(i2))
+                g1.ItsSharedNeighbors.put(i2, new ArrayList<Integer>());
+            g1.ItsSharedNeighbors.get(i2).add(-1);
         }
         if (g2.HasNeighborId(g1.ItsCenter.ItsVertexId)) {
-            if (!g2.ItsSharedNeighbors.containsKey(g1))
-                g2.ItsSharedNeighbors.put(g1, new ArrayList<Integer>());
-            g2.ItsSharedNeighbors.get(g1).add(-1);
+            if (!g2.ItsSharedNeighbors.containsKey(i1))
+                g2.ItsSharedNeighbors.put(i1, new ArrayList<Integer>());
+            g2.ItsSharedNeighbors.get(i1).add(-1);
         }
     }
 }

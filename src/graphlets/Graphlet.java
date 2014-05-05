@@ -13,7 +13,7 @@ public class Graphlet {
     public List<Node> ItsNeighbors;
     public List<Edge> ItsEdges;
     public List<Edge> ItsBoundaries;
-    public Map<Graphlet, List<Integer>> ItsSharedNeighbors;
+    public Map<Integer, List<Integer>> ItsSharedNeighbors;
     public Map<Integer, Integer> ItsSharedMappings;
     
     public Graphlet() {
@@ -79,6 +79,22 @@ public class Graphlet {
         return degree;
     }
     
+    public Edge GetEdge(int n1, int n2) {
+        for (Edge e : ItsEdges) {
+            if ((e.ItsFirstNode == n1 && e.ItsSecondNode == n2) ||
+                    (e.ItsFirstNode == n2 && e.ItsSecondNode == n1)) {
+                return e;
+            }
+        }
+        for (Edge e : ItsBoundaries) {
+            if ((e.ItsFirstNode == n1 && e.ItsSecondNode == n2) ||
+                    (e.ItsFirstNode == n2 && e.ItsSecondNode == n1)) {
+                return e;
+            }
+        }
+        return null;
+    }
+    
     @Override
     public String toString() {
         return "Graphlet: <" + ItsCenter.ItsVertexId + ", " + ItsNeighbors + ", " + ItsBoundaries + ">";
@@ -86,8 +102,8 @@ public class Graphlet {
     
     public String SharedNeighborsInfo() {
         String result = "";
-        for (Map.Entry<Graphlet, List<Integer>> e : ItsSharedNeighbors.entrySet()) {
-            result += "Shared " + ItsCenter.ItsVertexId + ": " + e.getKey().ItsCenter.ItsVertexId + " " + e.getValue();
+        for (Map.Entry<Integer, List<Integer>> e : ItsSharedNeighbors.entrySet()) {
+            result += "Shared " + ItsCenter.ItsVertexId + ": " + e.getKey() + " " + e.getValue();
         }
         return result;
     }
@@ -103,7 +119,7 @@ public class Graphlet {
             }
         }
         List<Map<Integer, Integer>> mappings = new ArrayList<>();
-        SubgraphSearch(mappings, query, data, mapping, candidates, useLabels);
+        SubgraphSearch(0, mappings, query, data, mapping, candidates, useLabels);
         return mappings;
     }
     
@@ -125,25 +141,18 @@ public class Graphlet {
         return possible;
     }
     
-    private static void SubgraphSearch(List<Map<Integer, Integer>> mappings, Graphlet query, Graphlet data, Map<Integer,Integer> mapping, List<List<Integer>> candidates, boolean useLabels) {
+    private static void SubgraphSearch(int current, List<Map<Integer, Integer>> mappings, Graphlet query, Graphlet data, Map<Integer,Integer> mapping, List<List<Integer>> candidates, boolean useLabels) {
         if (mapping.size() == query.ItsNeighbors.size()) {
             mappings.add(new HashMap<>(mapping));
             return;
         }
         
-        for (int i = 0; i < candidates.size(); i++) {
-            System.out.println(mapping.containsKey(i));
-            if (mapping.containsKey(i))
-                continue;
-            System.out.println("Candidates: " + candidates.get(i));
-            candidates.set(i, RefineCandidates(query, i, data, candidates.get(i)));
-            System.out.println("Refined: " + candidates.get(i));
-            for (Integer index : candidates.get(i)) {
-                if (IsJoinable(query, data, mapping, i, index, useLabels)) {
-                    mapping.put(i, index);
-                    SubgraphSearch(mappings, query, data, mapping, candidates, useLabels);
-                    mapping.remove(i);
-                }
+        candidates.set(current, RefineCandidates(query, current, data, candidates.get(current)));
+        for (Integer index : candidates.get(current)) {
+            if (IsJoinable(query, data, mapping, current, index, useLabels)) {
+                mapping.put(current, index);
+                SubgraphSearch(current + 1, mappings, query, data, mapping, candidates, useLabels);
+                mapping.remove(current);
             }
         }
     }

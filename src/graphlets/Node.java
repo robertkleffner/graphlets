@@ -11,6 +11,6 @@ public class Node {
     
     @Override
     public String toString() {
-        return "" + ItsVertexId;
+        return ItsVertexId + ":" + ItsLabel;
     }
 }

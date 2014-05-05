@@ -1,8 +1,8 @@
 v 0 A
-v 1 A
-v 2 A
-v 3 A
-v 4 A
+v 1 B
+v 2 C
+v 3 D
+v 4 E
 e 0 1 01
 e 0 2 02
 e 0 3 03

@@ -48,7 +48,7 @@ public class Matcher {
             System.out.println(g.ItsEdges);
         }
         
-        return null;
+        return result;
     }
     
 //    private void GetMapping(List<Map<Integer, Integer>> full, Map<Integer, Integer> current, List<Graph> fullg, Graph currentg, List<Graphlet> cover, List<Integer> searched, Graphlet q, boolean useLabel, int vertices) {

@@ -288,7 +288,7 @@ private Importer dataImport;
                          {
                              for(Object nwgrph : NewGraph)
                              {
-                                 if(graph.getLabel(nwgrph) == n.ItsLabel)
+                                 if(graph.getLabel(nwgrph).equals( n.ItsLabel))
                                  {
                                      resultidx[idxx].VertexIndex = n.ItsVertexId;
                                      resultidx[idxx].Vertice = nwgrph;
@@ -307,7 +307,8 @@ private Importer dataImport;
                                       {
                                           if(resultidx[eidx2].VertexIndex == newedge.ItsSecondNode)
                                           {
-                                              graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].VertexIndex, resultidx[eidx2].VertexIndex, "startArrow=none;endArrow=none;strokeWidth=4;strokeColor=#66FF00");
+                                              System.out.println("adding edge");
+                                              graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].Vertice, resultidx[eidx2].Vertice,"startArrow=none;endArrow=none;strokeWidth=4;strokeColor=#66FF00");
                                               
                                           }
                                       }
@@ -357,7 +358,7 @@ private Importer dataImport;
                          {
                              for(Object nwgrph : NewGraph)
                              {
-                                 if(graph.getLabel(nwgrph) == n.ItsLabel)
+                                 if(graph.getLabel(nwgrph).equals( n.ItsLabel))
                                  {
                                      resultidx[idxx].VertexIndex = n.ItsVertexId;
                                      resultidx[idxx].Vertice = nwgrph;
@@ -375,7 +376,7 @@ private Importer dataImport;
                                       for(int eidx2 = 0; eidx2 < resultidx.length; eidx2++)
                                       {
                                           if(resultidx[eidx2].VertexIndex == newedge.ItsSecondNode)
-                                             graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].VertexIndex, resultidx[eidx2].VertexIndex,"startArrow=none;endArrow=none;strokeWidth=4;strokeColor=#66FF00"); 
+                                             graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].VertexIndex, resultidx[eidx2].VertexIndex); 
                                       }
                                  }
                              }

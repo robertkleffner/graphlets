@@ -276,14 +276,14 @@ private Importer dataImport;
                          {
                              graph.insertVertex(graph.getDefaultParent(), null, n.ItsLabel, 0, 0, 80, 40,"shape=ellipse");
                          }
-                         
+                         //Newgraph is the graph on the screen
                          Object[] NewGraph = graph.getChildVertices(graph.getDefaultParent());
-                          //after the verts have been drawn, capture the graph on the screen into the class format
-                         QueryIndex resultidx[] = new QueryIndex[50];
+                          //resultidx will be the loaded class with info from the results and Newgraph
+                         List<QueryIndex> resultidx = new ArrayList<>();
                          for(int i=0; i <NewGraph.length; i++)
                          {
                              //initialize
-                             resultidx[i] = new QueryIndex();
+                             resultidx.add(new QueryIndex());
                          }
                          
                          for(Node n :  g_load.ItsVertices)//load the nodes into QueryIndex
@@ -292,25 +292,30 @@ private Importer dataImport;
                              {
                                  if(graph.getLabel(nwgrph).equals( n.ItsLabel))
                                  {
-                                     resultidx[idxx].VertexIndex = n.ItsVertexId;
-                                     resultidx[idxx].Vertice = nwgrph;
-                                     resultidx[idxx].NodeLabel = graph.getLabel(nwgrph);
+                                     resultidx.get(idxx).VertexIndex = n.ItsVertexId;
+                                     resultidx.get(idxx).Vertice = nwgrph;
+                                     resultidx.get(idxx).NodeLabel = graph.getLabel(nwgrph);
                                      idxx++;
                                  }
                              }
                          }
+                         //edges for Find Solution
+                      //   for(QueryIndex check : resultidx)
+                       //  {
+                       //      System.out.println(check.VertexIndex);
+                      //   }
                          for(Edge newedge: g_load.ItsEdges)
                          {
-                             for(int eidx = 0; eidx < resultidx.length; eidx++)
+                             for(int eidx = 0; eidx < resultidx.size(); eidx++)
                              {
-                                 if(resultidx[eidx].VertexIndex == newedge.ItsFirstNode)
+                                 if(resultidx.get(eidx).VertexIndex == newedge.ItsFirstNode)
                                  {
-                                      for(int eidx2 = 0; eidx2 < resultidx.length; eidx2++)
+                                      for(int eidx2 = 0; eidx2 < resultidx.size(); eidx2++)
                                       {
-                                          if(resultidx[eidx2].VertexIndex == newedge.ItsSecondNode)
+                                          if(resultidx.get(eidx2).VertexIndex == newedge.ItsSecondNode)
                                           {
-                                              System.out.println("adding edge");
-                                              graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].Vertice, resultidx[eidx2].Vertice,"startArrow=none;endArrow=none;strokeWidth=2;strokeColor=#6CADCB");
+                                            //  System.out.println("adding edge");
+                                              graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx.get(eidx).Vertice, resultidx.get(eidx2).Vertice,"startArrow=none;endArrow=none;strokeWidth=2;strokeColor=#6CADCB");
                                               layout.execute(graph.getDefaultParent());
                                           }
                                       }
@@ -320,40 +325,35 @@ private Importer dataImport;
                     }
                      
                    init = false;//a single graph result   
-                   
-                              //layout.set;
-                 //  layout.execute(graph.getDefaultParent());
-                 }          
-                                 
-        //  layout.execute(graph.getDefaultParent());
+                 }                                          
             }
         });//end of find solutions
         
-		//next solution (jbutton2)
+		//Next solution (jbutton2)
         
         jButton2.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent evt)
             { 
-                int result_number = 0;//allows us to loop through the list of graph results
-                for(Graph graphResult : results)//the Next button will start at the next result in the list which was returned by the graphMatcher
+               // int result_number = 0;//allows us to loop through the list of graph results
+                Graph graphResult = results.get(global_result_number);//the Next button will start at the next result in the list which was returned by the graphMatcher
                 {
-                    if((result_number == global_result_number)&& global_result_number < 25)//loop through the results till you get to the next one
+                    if(global_result_number < 100)//loop through the results till you get to the next one
                     {
                          graph.selectAll();
                          graph.removeCells();
                          for(Node n :  graphResult.ItsVertices)
                          {
-                             graph.insertVertex(graph.getDefaultParent(), null, n.ItsLabel, 0, 0, 80, 30);
+                             graph.insertVertex(graph.getDefaultParent(), null, n.ItsLabel, 0, 0, 80, 40,"shape=ellipse");
                          }
                          
                          Object[] NewGraph = graph.getChildVertices(graph.getDefaultParent());
                           //after the verts have been drawn, capture the graph on the screen into the class format
-                         QueryIndex resultidx[] = new QueryIndex[50];
+                         List<QueryIndex> resultidx = new ArrayList<>();
                          for(int i=0; i <NewGraph.length; i++)
                          {
                              //initialize
-                             resultidx[i] = new QueryIndex();
+                             resultidx.add(new QueryIndex());
                          }
                          int idxx=0;
                          for(Node n :  graphResult.ItsVertices)//load the nodes into QueryIndex
@@ -362,36 +362,35 @@ private Importer dataImport;
                              {
                                  if(graph.getLabel(nwgrph).equals( n.ItsLabel))
                                  {
-                                     resultidx[idxx].VertexIndex = n.ItsVertexId;
-                                     resultidx[idxx].Vertice = nwgrph;
-                                     resultidx[idxx].NodeLabel = graph.getLabel(nwgrph);
+                                     resultidx.get(idxx).VertexIndex = n.ItsVertexId;
+                                     resultidx.get(idxx).Vertice = nwgrph;
+                                     resultidx.get(idxx).NodeLabel = graph.getLabel(nwgrph);
                                      idxx++;
                                  }
                              }
                          }
+                         //edges for Next Solution
                          for(Edge newedge : graphResult.ItsEdges)
                          {
-                             for(int eidx = 0; eidx < resultidx.length; eidx++)
+                             for(int eidx = 0; eidx < resultidx.size(); eidx++)
                              {
-                                 if(resultidx[eidx].VertexIndex == newedge.ItsFirstNode)
+                                 if(resultidx.get(eidx).VertexIndex == newedge.ItsFirstNode)
                                  {
-                                      for(int eidx2 = 0; eidx2 < resultidx.length; eidx2++)
+                                      for(int eidx2 = 0; eidx2 < resultidx.size(); eidx2++)
                                       {
-                                          if(resultidx[eidx2].VertexIndex == newedge.ItsSecondNode)
-                                             graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].Vertice, resultidx[eidx2].Vertice,"startArrow=none;endArrow=none;strokeWidth=4;strokeColor=#6CADCB"); 
+                                          if(resultidx.get(eidx2).VertexIndex == newedge.ItsSecondNode)
+                                             graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx.get(eidx).Vertice, resultidx.get(eidx2).Vertice,"startArrow=none;endArrow=none;strokeWidth=2;strokeColor=#6CADCB"); 
                                       }
                                  }
                              }
                          }
-                      //   mxStylesheet stylesheet = graph.getStylesheet();
-                      //   style.put(mxConstants.STYLE_ENDARROW, mxConstants.NONE);
-                        // stylesheet.getStylesheet().getDefaultEdgeStyle.put(mxConstants.STYLE_ENDARROW, mxConstants.NONE);
+
                          mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
                              // layout.set
                          layout.execute(graph.getDefaultParent());
                         global_result_number++;//the number of the next result we'll want to view
                     }
-                    result_number++;//how many results we've looped through
+                  //  result_number++;//how many results we've looped through
                 }
                 
             }
@@ -430,14 +429,7 @@ private Importer dataImport;
                                     graph.getModel().remove(cell);
                                 }
                         }
-                        ////////
-                       /* if(e.getButton() ==MouseEvent.BUTTON3 && e.getClickCount() == 1 )
-                        {
-                             Object cell = graphComponent.getCellAt(e.getX(), e.getY());
-                             if (cell != null)
-                               //  System.out.println("You are Here");
 
-                        }*/
                 }
         });
 	}

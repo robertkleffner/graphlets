@@ -59,6 +59,16 @@ public class Graph {
         return null;
     }
     
+    public void RemoveEdge(Integer n1, Integer n2) {
+        for (int i = 0; i < ItsEdges.size(); i++) {
+            if ((ItsEdges.get(i).ItsFirstNode == n1 && ItsEdges.get(i).ItsSecondNode == n2) ||
+                (ItsEdges.get(i).ItsFirstNode == n2 && ItsEdges.get(i).ItsSecondNode == n1)) {
+                ItsEdges.remove(i);
+                i--;
+            }
+        }
+    }
+    
     private static void Search(Graph search, Graph subgraph, List<List<Integer>> possible, List<Integer> assignments, List<Edge> edges, List<Graph> matched) {
         int length = assignments.size();
         

@@ -29,10 +29,6 @@ public class Matcher {
         
         Graphlet q = cover.get(0);
         
-        //List<Graphlet> matches = GetCandidateMatchingGraphlets(q, useLabel);
-        //for (Graphlet g : matches) {
-        //    List<Map<Integer, Integer>> mappings = Graphlet.IsomorphicSubgraphMappings(q, g, useLabel);
-        //}
         // select all candidates for first graphlet
         // check for isomorphism
         // for each result, select neighboring graphlets containing shared vertices
@@ -42,7 +38,7 @@ public class Matcher {
         
         List<Graph> result = new ArrayList<>();
         //GetMapping(isomappings, new HashMap<Integer, Integer>(), new Graph(), cover, new ArrayList<Integer>(), q, useLabel, query.ItsVertices.size());
-        GetMapping(result, new Graph(), cover, new ArrayList<Integer>(), q, useLabel, query.ItsVertices.size());
+        GetMapping(result, new Graph(), cover, new ArrayList<Integer>(), q, useLabel, query.ItsVertices.size(), query.ItsEdges.size());
         for (Graph g : result) {
             System.out.println(g.ItsVertices);
             System.out.println(g.ItsEdges);
@@ -86,7 +82,7 @@ public class Matcher {
 //        }
 //    }
     
-    private void GetMapping(List<Graph> full, Graph current, List<Graphlet> cover, List<Integer> searched, Graphlet q, boolean useLabel, int vertices) {
+    private void GetMapping(List<Graph> full, Graph current, List<Graphlet> cover, List<Integer> searched, Graphlet q, boolean useLabel, int vertices, int edges) {
         searched.add(q.ItsCenter.ItsVertexId);
         List<Graphlet> matches = GetCandidateMatchingGraphlets(q, useLabel);
         for (Graphlet d : matches) {
@@ -99,11 +95,15 @@ public class Matcher {
             List<Map<Integer, Integer>> mappings = Graphlet.IsomorphicSubgraphMappings(q, d, useLabel);
             for (Map<Integer, Integer> m : mappings) {
                 List<Integer> added = new ArrayList<>();
+                List<Edge> newedge = new ArrayList<>();
                 List<Edge> newbound = new ArrayList<>();
                 for (Map.Entry<Integer, Integer> e : m.entrySet()) {
                     if (current.GetNodeById(d.ItsNeighbors.get(e.getValue()).ItsVertexId) == null) {
                         current.ItsVertices.add(d.ItsNeighbors.get(e.getValue()));
-                        current.ItsEdges.add(d.GetEdge(d.ItsCenter.ItsVertexId, d.ItsNeighbors.get(e.getValue()).ItsVertexId));
+                        if (!current.ContainsEdge(d.GetEdge(d.ItsCenter.ItsVertexId, d.ItsNeighbors.get(e.getValue()).ItsVertexId))) {
+                            current.ItsEdges.add(d.GetEdge(d.ItsCenter.ItsVertexId, d.ItsNeighbors.get(e.getValue()).ItsVertexId));
+                            newedge.add(d.GetEdge(d.ItsCenter.ItsVertexId, d.ItsNeighbors.get(e.getValue()).ItsVertexId));
+                        }
                         for (Map.Entry<Integer, Integer> e2 : m.entrySet()) {
                             if (q.ContainsBoundary(q.ItsNeighbors.get(e.getKey()).ItsVertexId, q.ItsNeighbors.get(e2.getKey()).ItsVertexId) &&
                                 !current.ContainsEdge(d.GetEdge(d.ItsNeighbors.get(e.getValue()).ItsVertexId, d.ItsNeighbors.get(e2.getValue()).ItsVertexId))) {
@@ -114,24 +114,25 @@ public class Matcher {
                         added.add(e.getValue());
                     }
                 }
-                if (current.ItsVertices.size() == vertices) {
+                if (current.ItsVertices.size() == vertices && current.ItsEdges.size() == edges) {
                     full.add(new Graph(current.ItsVertices, current.ItsEdges));
-                    return;
                 } else {
                     for (Integer i : q.ItsSharedNeighbors.keySet()) {
                         if (searched.contains(cover.get(i).ItsCenter.ItsVertexId))
                             continue;
                         
-                        GetMapping(full, current, cover, searched, cover.get(i), useLabel, vertices);
+                        GetMapping(full, current, cover, searched, cover.get(i), useLabel, vertices, edges);
                        
                     }
                 }
                 for (Integer i : added) {
                     current.ItsVertices.remove(d.ItsNeighbors.get(i));
-                    current.ItsEdges.remove(d.GetEdge(d.ItsCenter.ItsVertexId, d.ItsNeighbors.get(i).ItsVertexId));
+                }
+                for (Edge e : newedge) {
+                    current.RemoveEdge(e.ItsFirstNode, e.ItsSecondNode);
                 }
                 for (Edge e : newbound) {
-                    current.ItsEdges.remove(e);
+                    current.RemoveEdge(e.ItsFirstNode, e.ItsSecondNode);
                 }
             }
             
@@ -165,36 +166,6 @@ public class Matcher {
         }
         
         return graphlets;
-        /*
-        List<Graph> filtered = new ArrayList<>();
-        for (Graphlet g : graphlets) {
-            Graph subgraph = new Graph();
-            subgraph.ItsVertices.add(g.ItsCenter);
-            for (Node n : g.ItsNeighbors) {
-                subgraph.ItsVertices.add(n);
-            }
-            for (Edge e : g.ItsEdges) {
-                subgraph.ItsEdges.add(e);
-            }
-            for (Edge e : g.ItsBoundaries) {
-                subgraph.ItsEdges.add(e);
-            }
-            List<Graph> result = Graph.FindIsomorphisms(subgraph, queryGraph);
-            for (Graph res : result) {
-                if (!res.ItsVertices.isEmpty()) {
-                    filtered.add(res);
-                }
-            }
-        }
-        System.out.println("Matched: " + filtered.size() + " graphlet(s)");
-        for (Graph g : filtered) {
-            System.out.println("\tGraph:");
-            System.out.println("\t\tVertices: " + g.ItsVertices);
-            System.out.println("\t\tEdges: " + g.ItsEdges);
-        }
-        
-        return filtered;
-        */
     }
     
     private Graphlet SelectGraphlet(int vertexId, String label) {
@@ -227,11 +198,6 @@ public class Matcher {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Graphlet: ");
-        System.out.println("\tCenter ID: " + g.ItsCenter.ItsVertexId);
-        System.out.println("\tEdges: " + g.ItsEdges.toString());
-        System.out.println("\tNeighbors: " + g.ItsNeighbors.toString());
-        System.out.println("\tBoundaries: " + g.ItsBoundaries.toString());
         return g;
     }
 }

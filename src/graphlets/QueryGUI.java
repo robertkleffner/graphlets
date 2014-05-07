@@ -76,7 +76,7 @@ private Importer dataImport;
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 155, Short.MAX_VALUE)
+            .addGap(0, 372, Short.MAX_VALUE)
         );
 
         jToggleButton1.setText("Add/Remove Nodes");
@@ -105,11 +105,11 @@ private Importer dataImport;
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBox1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(87, 87, 87)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(130, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,10 +132,10 @@ private Importer dataImport;
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSplitPane1)))
         );
         layout.setVerticalGroup(
@@ -196,7 +196,8 @@ private Importer dataImport;
      // List<Graph> results = null;
 	final mxGraph graph = new mxGraph();
 	panel.setLayout(new BorderLayout(0, 0));
-
+        //mxConstants.STYLE_SHAPE = mxConstants.SHAPE_ELLIPSE;
+       // String Style = mxConstants.STYLE_SHAPE;
         final mxGraphComponent graphComponent = new mxGraphComponent(graph);
 	panel.add(graphComponent);
         jButton2.setVisible(false);
@@ -206,6 +207,7 @@ private Importer dataImport;
         {
             public void actionPerformed(ActionEvent evt)
             {
+                mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
                 boolean useLabels = false;
                 if(jCheckBox1.isSelected())
                     useLabels = true;
@@ -267,12 +269,12 @@ private Importer dataImport;
                 {
                      if(init == true)//limit to the first graph result
                      {
-                         System.out.println("should print");
+                        // System.out.println("should print");
                          graph.selectAll();
                          graph.removeCells();
                          for(Node n :  g_load.ItsVertices)
                          {
-                             graph.insertVertex(graph.getDefaultParent(), null, n.ItsLabel, 0, 0, 80, 30);
+                             graph.insertVertex(graph.getDefaultParent(), null, n.ItsLabel, 0, 0, 80, 40,"shape=ellipse");
                          }
                          
                          Object[] NewGraph = graph.getChildVertices(graph.getDefaultParent());
@@ -308,8 +310,8 @@ private Importer dataImport;
                                           if(resultidx[eidx2].VertexIndex == newedge.ItsSecondNode)
                                           {
                                               System.out.println("adding edge");
-                                              graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].Vertice, resultidx[eidx2].Vertice,"startArrow=none;endArrow=none;strokeWidth=4;strokeColor=#66FF00");
-                                              
+                                              graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].Vertice, resultidx[eidx2].Vertice,"startArrow=none;endArrow=none;strokeWidth=2;strokeColor=#6CADCB");
+                                              layout.execute(graph.getDefaultParent());
                                           }
                                       }
                                  }
@@ -318,12 +320,12 @@ private Importer dataImport;
                     }
                      
                    init = false;//a single graph result   
-                   mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
-                             // layout.set
-                   layout.execute(graph.getDefaultParent());
+                   
+                              //layout.set;
+                 //  layout.execute(graph.getDefaultParent());
                  }          
                                  
-          
+        //  layout.execute(graph.getDefaultParent());
             }
         });//end of find solutions
         
@@ -376,7 +378,7 @@ private Importer dataImport;
                                       for(int eidx2 = 0; eidx2 < resultidx.length; eidx2++)
                                       {
                                           if(resultidx[eidx2].VertexIndex == newedge.ItsSecondNode)
-                                             graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].VertexIndex, resultidx[eidx2].VertexIndex); 
+                                             graph.insertEdge(graph.getDefaultParent(), null, newedge.ItsLabel, resultidx[eidx].Vertice, resultidx[eidx2].Vertice,"startArrow=none;endArrow=none;strokeWidth=4;strokeColor=#6CADCB"); 
                                       }
                                  }
                              }
@@ -414,7 +416,7 @@ private Importer dataImport;
                                 
                                 if (cell == null)
                                 {
-                                    graph.insertVertex(graph.getDefaultParent(), null, globalInt, e.getX(), e.getY(), 80, 30);
+                                    graph.insertVertex(graph.getDefaultParent(), null, globalInt, e.getX(), e.getY(), 80, 40,"shape=ellipse");
                                     globalInt++;
                                // System.out.println( graph.getLabel(cell));
                                  

@@ -29,13 +29,6 @@ public class Matcher {
         
         Graphlet q = cover.get(0);
         
-        // select all candidates for first graphlet
-        // check for isomorphism
-        // for each result, select neighboring graphlets containing shared vertices
-            // if no result, eliminate entire subsearch
-            // else check for isomorphism
-        //
-        
         List<Graph> result = new ArrayList<>();
         //GetMapping(isomappings, new HashMap<Integer, Integer>(), new Graph(), cover, new ArrayList<Integer>(), q, useLabel, query.ItsVertices.size());
         GetMapping(result, new Graph(), cover, new ArrayList<Integer>(), q, useLabel, query.ItsVertices.size(), query.ItsEdges.size());
@@ -46,41 +39,6 @@ public class Matcher {
         
         return result;
     }
-    
-//    private void GetMapping(List<Map<Integer, Integer>> full, Map<Integer, Integer> current, List<Graph> fullg, Graph currentg, List<Graphlet> cover, List<Integer> searched, Graphlet q, boolean useLabel, int vertices) {
-//        List<Graphlet> matches = GetCandidateMatchingGraphlets(q, useLabel);
-//        for (Graphlet d : matches) {
-//            current.put(q.ItsCenter.ItsVertexId, d.ItsCenter.ItsVertexId);
-//            
-//            List<Map<Integer, Integer>> mappings = Graphlet.IsomorphicSubgraphMappings(q, d, useLabel);
-//            for (Map<Integer, Integer> m : mappings) {
-//                List<Integer> added = new ArrayList<>();
-//                for (Map.Entry<Integer, Integer> e : m.entrySet()) {
-//                    if (!current.containsKey(q.ItsNeighbors.get(e.getKey()).ItsVertexId)) {
-//                        current.put(q.ItsNeighbors.get(e.getKey()).ItsVertexId, d.ItsNeighbors.get(e.getValue()).ItsVertexId);
-//                        added.add(q.ItsNeighbors.get(e.getKey()).ItsVertexId);
-//                    }
-//                }
-//                if (current.size() == vertices) {
-//                    full.add(current);
-//                    return;
-//                } else {
-//                    for (Integer i : q.ItsSharedNeighbors.keySet()) {
-//                        if (searched.contains(i))
-//                            continue;
-//                        searched.add(i);
-//                        GetMapping(full, current, cover, searched, q, useLabel, vertices);
-//                        searched.remove(i);
-//                    }
-//                }
-//                for (Integer i : added) {
-//                    current.remove(i);
-//                }
-//            }
-//            
-//            current.remove(q.ItsCenter.ItsVertexId);
-//        }
-//    }
     
     private void GetMapping(List<Graph> full, Graph current, List<Graphlet> cover, List<Integer> searched, Graphlet q, boolean useLabel, int vertices, int edges) {
         searched.add(q.ItsCenter.ItsVertexId);
